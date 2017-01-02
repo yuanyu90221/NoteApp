@@ -153,9 +153,14 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		switch(id){
 			case R.id.deleteBatchBtn:
 				// TODO : add process to delete batch
-				noteDAO.batchDelete(idsToDelete.toArray(new String[0]));
+				System.out.println(noteListAdapter.getDeleteIds().size());
+				idsToDelete = noteListAdapter.getDeleteIds();
+				String[] ids = idsToDelete.toArray(new String[0]);
+				System.out.println("Note: before delete!");
+				noteDAO.batchDelete(ids);
 				noteList.clear();
 				noteList.addAll(noteDAO.getAll());
+				noteListAdapter.notifyDataSetChanged();
 				resetUnDelete();
 				break;
 			case R.id.cancelDeletebtn:
@@ -174,7 +179,10 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		changeDeleteStatus(changeDeletable);
 		deleteBatchBtn.setVisibility(View.GONE);
 		cancelDeleteAllBtn.setVisibility(View.GONE);
-		idsToDelete.clear();
+		noteListAdapter.clearDeleteIds();
+		noteList.clear();
+		noteList.addAll(noteDAO.getAll());
+		noteListAdapter.notifyDataSetChanged();
 	}
 	
 	/**
@@ -185,7 +193,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		changeDeleteStatus(changeDeletable);
 		deleteBatchBtn.setVisibility(View.VISIBLE);
 		cancelDeleteAllBtn.setVisibility(View.VISIBLE);
-		idsToDelete.clear();
+		noteListAdapter.clearDeleteIds();
 	}
 
 	@Override

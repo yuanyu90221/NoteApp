@@ -1,5 +1,6 @@
 package com.note.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.searchviewdm.R;
@@ -10,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class NoteListAdapter extends ArrayAdapter<NoteVO> {
+public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 
 	/**
 	 * field: layout resource
@@ -25,6 +28,7 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO> {
 	 */
 	private List<NoteVO> noteList;
 	
+	private List<String> deleteIds = new ArrayList<String>();
 	/**
 	 * @description constructor 
 	 * 
@@ -68,6 +72,27 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO> {
 		createTime.setText(note.getFormatCreateTime());
 		int visibility = note.isDeletable() == true ? View.VISIBLE: View.GONE;
 		deleteChk.setVisibility(visibility);
+		deleteChk.setChecked(false);
+		deleteChk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				String id = Long.toString(note.get_id());
+				System.out.println("NOTE: "+ id);
+				
+				int pos = deleteIds.indexOf(id); 
+				System.out.println("NOTE: pos = "+ pos);
+				if(isChecked){
+					if(pos==-1){
+						deleteIds.add(id);
+					}
+				}
+				else{
+					if(pos!=-1){
+						deleteIds.remove(id);
+					}
+				}
+			}
+		});
 		return itemView;
 	}
 	
@@ -92,5 +117,13 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO> {
 	 */
 	public NoteVO get(int index){
 		return noteList.get(index);
+	}
+	
+	public void clearDeleteIds(){
+		deleteIds.clear();
+	}
+	
+	public List<String> getDeleteIds(){
+		return deleteIds;
 	}
 }

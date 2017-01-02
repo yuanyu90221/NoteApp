@@ -124,8 +124,21 @@ public class NoteDAO {
 	 * @return whether have delete some note
 	 */
 	public boolean batchDelete(String[] ids){
-		String where = _ID + "=?";
-		return db.delete(TB_NAME, where, ids) > 0;
+		String where = _ID +" in (";
+		StringBuilder sb = new StringBuilder(where);
+		int size = ids.length;
+		int count = 0;
+		for(String id: ids){
+			sb.append(id);
+			count++;
+			if(count!=size){
+				sb.append(",");
+			}
+			else{
+				sb.append(")");
+			}
+		}
+		return db.delete(TB_NAME, sb.toString(), null) > 0;
 	}
 	
 	/**
