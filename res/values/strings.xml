@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">備忘錄</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_bar_hint">搜尋記事標題</string>
+    <string name="batch_delete">批次刪除</string>
+    <string name="query_after_date">依時間查詢</string>
+    <string name="query_todos">待執行事項</string>
+    <string name="searchIcon_dsp">搜尋icon</string>
+    <string name="sample_btn">新增測試資料</string>
+    <string name="delete_all_btn">刪除所有記事</string>
+    <string name="deleteBatchStr">刪除</string>
+    <string name="cancelDeleteAll">取消</string>
+
+</resources>
