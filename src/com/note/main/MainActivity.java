@@ -19,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -191,20 +190,9 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		
 		NoteVO note = noteList.get(position);	
 		System.out.println("NOTE: "+ note);
-		ListView currentList = (ListView) parent;
-		System.out.println("NOTE: " + (currentList.getId()==R.id.listitem));
-		if(currentList.isItemChecked(position)){// batch delete logic
-			System.out.println("NOTE: "+changeDeletable);
-//		    note = noteList.get(position);	
-			System.out.println("NOTE: "+ note);
-			idsToDelete.add(Long.toString(note.get_id()));
-		  
-		}
-		else{
-			System.out.println("NOTE: "+lv.isItemChecked(position));
-		}
 		
 	}
 }

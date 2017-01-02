@@ -57,15 +57,15 @@ public class MyDBHelper extends SQLiteOpenHelper {
     
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		// �إ����ε{���ݭn�����
+		// create DB schema
 		db.execSQL(NoteDAO.createTable); 	 
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		 // �R���즳�����
+		 // update DB schema
 		db.execSQL("DROP TABLE IF EXISTS "+NoteDAO.TB_NAME);
-		// �I�sonCreate�إ߷s�������
+		
 		onCreate(db);
 	}
 
