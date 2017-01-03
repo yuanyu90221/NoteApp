@@ -203,10 +203,9 @@ public class NoteDAO {
 	 */
 	public List<NoteVO> getAllByDate(long date){
 		List<NoteVO> noteList = new ArrayList<NoteVO>();
-		String where = CREATE_TIME + ">=" + date;
-		String orderBy = CREATE_TIME + " DESC";
-		Cursor result = db.query(
-                TB_NAME, null, where, null, null, null, null, orderBy);
+		String where = " WHERE "+ CREATE_TIME + " >= " + date;
+		String orderBy = " ORDER BY "+CREATE_TIME + " DESC";
+		Cursor result = db.rawQuery("SELECT * from "+ TB_NAME + where + orderBy, null);
 		while(result.moveToNext()){
 			noteList.add(getNote(result));
 		}
