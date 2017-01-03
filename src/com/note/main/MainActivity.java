@@ -45,7 +45,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	Button deleteBatchBtn, cancelDeleteAllBtn, returnBtn;
 	ImageButton searchBtn;
 	LinearLayout special_query;
-	TextView filterText;
+	TextView filterText, no_data_view;
 	Toast tos;
 	// 用來確認是否可以刪除的flag
 	boolean changeDeletable = false;
@@ -92,6 +92,8 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		noteListAdapter.setNotifyOnChange(true);
 		lv.setAdapter(noteListAdapter);
 		lv.setOnItemClickListener(this);
+		no_data_view = (TextView) findViewById(R.id.no_data_view);
+		lv.setEmptyView(no_data_view);
 		// 設定onTextWatcher
 		inputSearch.addTextChangedListener(new TextWatcher() {
 
