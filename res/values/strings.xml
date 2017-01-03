@@ -13,5 +13,6 @@
     <string name="delete_all_btn">刪除所有記事</string>
     <string name="deleteBatchStr">刪除</string>
     <string name="cancelDeleteAll">取消</string>
+    <string name="returnBtnStr">返回</string>
 
 </resources>

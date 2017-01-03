@@ -24,9 +24,9 @@
             android:id="@+id/create_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" 
-            android:textColor="#00Fa00"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="#00aa00" />
 
         <TextView
             android:id="@+id/create_time"

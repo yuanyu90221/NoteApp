@@ -1,6 +1,7 @@
 package com.note.main;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.example.searchviewdm.R;
@@ -10,8 +11,6 @@ import com.note.vo.NoteVO;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +20,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements OnClickListener,OnItemClickListener{
@@ -31,8 +32,10 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	NoteListAdapter noteListAdapter;
 	List<NoteVO> noteList = null;
 	private EditText inputSearch;
-	Button deleteBatchBtn, cancelDeleteAllBtn;
+	Button deleteBatchBtn, cancelDeleteAllBtn, returnBtn;
 	ImageButton searchBtn;
+	LinearLayout special_query;
+	TextView filterText;
 	Toast tos;
 	// 用來確認是否可以刪除的flag
 	boolean changeDeletable = false;
@@ -51,6 +54,10 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		tos = Toast.makeText(this, "", Toast.LENGTH_LONG);
 		searchBtn = (ImageButton) findViewById(R.id.searchBtn);
 		searchBtn.setOnClickListener(this);
+		special_query = (LinearLayout) findViewById(R.id.specical_query);
+		returnBtn = (Button) findViewById(R.id.returnBtn);
+		returnBtn.setOnClickListener(this);
+		filterText = (TextView) findViewById(R.id.filerText);
 	}
 
 	@Override
@@ -68,6 +75,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		resetUnDelete();
+		special_query.setVisibility(View.GONE);
 		switch (id) {
 		case R.id.action_delete_batch:
 			// 打開 刪除的checkbox
@@ -83,11 +91,20 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			// TODO :新增 note 邏輯
 			return true;
 		case R.id.action_query_todos:
-
+			// TODO: 新增query todos 邏輯
+			
+			filterText.setText(getResources().getString(R.string.query_todos));
+			noteList.clear();
+			Calendar c = Calendar.getInstance();
+			noteList.addAll(noteDAO.getAllByDate(c.getTimeInMillis()));
+			noteListAdapter.notifyDataSetChanged();
+			special_query.setVisibility(View.VISIBLE);
 			return true;
 		case R.id.action_query_after_date:
-
-			return true;
+			// TODO: add pick date logic
+//            filterText.setText(getResources().getString(R.string.query_after_date));
+//            special_query.setVisibility(View.VISIBLE);
+            return true;
 		case R.id.action_sample:
 			// 新增測試資料
 			noteDAO = new NoteDAO(getApplicationContext());
@@ -128,6 +145,8 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		noteListAdapter.setNotifyOnChange(true);
 		lv.setAdapter(noteListAdapter);
 		lv.setOnItemClickListener(this);
+		resetUnDelete();
+		special_query.setVisibility(View.GONE);
 //		inputSearch.addTextChangedListener(new TextWatcher() {
 //
 //			@Override
@@ -179,6 +198,18 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 					noteList.addAll(noteDAO.getAll());
 				}
 				noteListAdapter.notifyDataSetChanged();
+				break;
+			case R.id.returnBtn:
+				String queryTitle = inputSearch.getText().toString().trim();
+				noteList.clear();
+				if( queryTitle.length() > 0 ){
+					noteList.addAll(noteDAO.getAllByTitle(queryTitle));
+				}
+				else{
+					noteList.addAll(noteDAO.getAll());
+				}
+				noteListAdapter.notifyDataSetChanged();
+				special_query.setVisibility(View.GONE);
 				break;
 		}
 		
