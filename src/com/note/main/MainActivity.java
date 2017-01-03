@@ -11,6 +11,8 @@ import com.note.vo.NoteVO;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,20 +46,49 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+        // bind 每個元件到ui 
 		lv = (ListView) findViewById(R.id.listitem);
 		inputSearch = (EditText) findViewById(R.id.searchBar);
 		deleteBatchBtn = (Button) findViewById(R.id.deleteBatchBtn);
 		cancelDeleteAllBtn = (Button) findViewById(R.id.cancelDeletebtn);
 		deleteBatchBtn.setOnClickListener(this);
 		cancelDeleteAllBtn.setOnClickListener(this);
+		// 設定顯示 tos
 		tos = Toast.makeText(this, "", Toast.LENGTH_LONG);
+		// 設定查詢ui以及button
 		searchBtn = (ImageButton) findViewById(R.id.searchBtn);
 		searchBtn.setOnClickListener(this);
 		special_query = (LinearLayout) findViewById(R.id.specical_query);
 		returnBtn = (Button) findViewById(R.id.returnBtn);
 		returnBtn.setOnClickListener(this);
 		filterText = (TextView) findViewById(R.id.filerText);
+		// 設定初始化 ListViewAdapter
+		noteDAO = new NoteDAO(getApplicationContext());
+		noteList = noteDAO.getAll();
+		noteListAdapter = new NoteListAdapter(this, R.layout.notelist, noteList);
+		noteListAdapter.setNotifyOnChange(true);
+		lv.setAdapter(noteListAdapter);
+		lv.setOnItemClickListener(this);
+		// 設定onTextWatcher
+		inputSearch.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				doSearch();
+				resetUnDelete();
+				special_query.setVisibility(View.GONE);
+			}
+		});
 	}
 
 	@Override
@@ -70,9 +101,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
+		
 		int id = item.getItemId();
 		resetUnDelete();
 		special_query.setVisibility(View.GONE);
@@ -91,12 +120,20 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			// TODO :新增 note 邏輯
 			return true;
 		case R.id.action_query_todos:
-			// TODO: 新增query todos 邏輯
-			
+			// query todos 邏輯
 			filterText.setText(getResources().getString(R.string.query_todos));
-			noteList.clear();
-			Calendar c = Calendar.getInstance();
-			noteList.addAll(noteDAO.getAllByDate(c.getTimeInMillis()));
+		    String queryTitle = inputSearch.getText().toString().trim();
+		    noteList.clear();
+		    Calendar c = Calendar.getInstance();
+		    if(queryTitle.length() == 0){
+		    	noteList.addAll(noteDAO.getAllByDate(c.getTimeInMillis()));
+		    }
+		    else{
+		    	NoteVO criteria = new NoteVO();
+		    	criteria.setTitle(queryTitle);
+		    	criteria.setCreateTime(c.getTimeInMillis());
+		    	noteList.addAll(noteDAO.getNotesByCriteria(criteria));
+		    }
 			noteListAdapter.notifyDataSetChanged();
 			special_query.setVisibility(View.VISIBLE);
 			return true;
@@ -106,7 +143,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 //            special_query.setVisibility(View.VISIBLE);
             return true;
 		case R.id.action_sample:
-			// 新增測試資料
+			// 新增測試資料 邏輯
 			noteDAO = new NoteDAO(getApplicationContext());
 			noteDAO.sample();
 			noteList.clear();
@@ -118,8 +155,6 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			noteDAO = new NoteDAO(getApplicationContext());
 			noteDAO.deleteAll();
 			noteList.clear();
-			noteList.addAll(noteDAO.getAll());
-
 			noteListAdapter.notifyDataSetChanged();
 			return true;
 		default:
@@ -128,6 +163,11 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 
 	}
 	
+	/**
+	 * 修改是否顯示checkbox
+	 * 
+	 * @param deletable
+	 */
 	private void changeDeleteStatus(boolean deletable){
 		for(NoteVO note: noteList){
 			note.setDeletable(deletable);
@@ -139,34 +179,9 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		super.onResume();
 		System.out.println("Resume");
 		// 更新畫面List
-		noteDAO = new NoteDAO(getApplicationContext());
-		noteList = noteDAO.getAll();
-		noteListAdapter = new NoteListAdapter(this, R.layout.notelist, noteList);
-		noteListAdapter.setNotifyOnChange(true);
-		lv.setAdapter(noteListAdapter);
-		lv.setOnItemClickListener(this);
+		doSearch();
 		resetUnDelete();
 		special_query.setVisibility(View.GONE);
-//		inputSearch.addTextChangedListener(new TextWatcher() {
-//
-//			@Override
-//			public void onTextChanged(CharSequence s, int start, int before, int count) {
-//				// MainActivity.this.adapter.getFilter().filter(s);
-//				MainActivity.this.noteListAdapter.getFilter().filter(s);
-//			}
-//
-//			@Override
-//			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//
-//			@Override
-//			public void afterTextChanged(Editable s) {
-//				// TODO Auto-generated method stub
-//
-//			}
-//		});
 	}
 
 	@Override
@@ -180,35 +195,20 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 				String[] ids = idsToDelete.toArray(new String[0]);
 				System.out.println("Note: before delete!");
 				noteDAO.batchDelete(ids);
-				noteList.clear();
-				noteList.addAll(noteDAO.getAll());
-				noteListAdapter.notifyDataSetChanged();
+				doSearch();
 				resetUnDelete();
 				break;
 			case R.id.cancelDeletebtn:
+				// 回復未刪除狀態
 				resetUnDelete();
 				break;
 			case R.id.searchBtn:
-				String searchText = inputSearch.getText().toString().trim();
-				noteList.clear();
-				if(searchText.length() > 0){
-					noteList.addAll(noteDAO.getAllByTitle(searchText));
-				}
-				else{
-					noteList.addAll(noteDAO.getAll());
-				}
-				noteListAdapter.notifyDataSetChanged();
+				// 做基本查詢
+				doSearch();
 				break;
 			case R.id.returnBtn:
-				String queryTitle = inputSearch.getText().toString().trim();
-				noteList.clear();
-				if( queryTitle.length() > 0 ){
-					noteList.addAll(noteDAO.getAllByTitle(queryTitle));
-				}
-				else{
-					noteList.addAll(noteDAO.getAll());
-				}
-				noteListAdapter.notifyDataSetChanged();
+				// 做基本查詢 回復基本查詢狀態
+				doSearch();
 				special_query.setVisibility(View.GONE);
 				break;
 		}
@@ -224,9 +224,6 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		deleteBatchBtn.setVisibility(View.GONE);
 		cancelDeleteAllBtn.setVisibility(View.GONE);
 		noteListAdapter.clearDeleteIds();
-		noteList.clear();
-		noteList.addAll(noteDAO.getAll());
-		noteListAdapter.notifyDataSetChanged();
 	}
 	
 	/**
@@ -242,9 +239,26 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		
+		//TODO: 新增update note 邏輯
 		NoteVO note = noteList.get(position);	
 		System.out.println("NOTE: "+ note);
 		
+	}
+	
+	/**
+	 * do default Search
+	 */
+	public void doSearch(){
+		// 取得基本查詢的值
+		String searchText = inputSearch.getText().toString().trim();
+		System.out.println("searchText: "+ searchText);
+		noteList.clear();
+		if(searchText.length() > 0){
+			noteList.addAll(noteDAO.getAllByTitle(searchText));
+		}
+		else{
+			noteList.addAll(noteDAO.getAll());
+		}
+		noteListAdapter.notifyDataSetChanged();
 	}
 }

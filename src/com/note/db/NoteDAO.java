@@ -3,7 +3,6 @@ package com.note.db;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import com.note.constant.Constant;
@@ -224,6 +223,47 @@ public class NoteDAO {
 		String where = " WHERE "+TITLE + " LIKE '%" + title +"%'";
 		String orderBy = " ORDER BY "+CREATE_TIME + " DESC";
 		Cursor result = db.rawQuery("SELECT * FROM "+TB_NAME + where + orderBy, null);
+		while(result.moveToNext()){
+			noteList.add(getNote(result));
+		}
+		result.close();
+		return noteList;
+	}
+	
+	/**
+	 * get Notes By Criteria
+	 * 
+	 * @param criteria
+	 * @return
+	 */
+	public List<NoteVO> getNotesByCriteria(NoteVO criteria){
+		List<NoteVO> noteList = new ArrayList<NoteVO>();
+		StringBuilder sb = new StringBuilder("SELECT * FROM ");
+		sb.append(TB_NAME);
+		int item_count = 0;
+		if(criteria.getCreateTime() > 0 ){
+			if(item_count < 1){
+			  sb.append(" WHERE ");
+			  sb.append(CREATE_TIME);
+			  sb.append(" >= ");
+			  sb.append(Long.toString(criteria.getCreateTime()));
+			}
+			item_count++;
+		}
+		if(!criteria.getTitle().equals("")){
+			if(item_count < 1){
+			  sb.append(" WHERE ");
+			}
+			else{
+			  sb.append(" AND ");
+			}
+			sb.append(TITLE);
+			sb.append(" LIKE ");
+			sb.append("'%"+criteria.getTitle()+"%'");
+			item_count++;
+		}
+		sb.append(" ORDER BY "+CREATE_TIME+" DESC");
+		Cursor result = db.rawQuery(sb.toString(), null);
 		while(result.moveToNext()){
 			noteList.add(getNote(result));
 		}
