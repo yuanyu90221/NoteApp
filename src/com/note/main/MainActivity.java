@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	List<NoteVO> noteList = null;
 	private EditText inputSearch;
 	Button deleteBatchBtn, cancelDeleteAllBtn;
+	ImageButton searchBtn;
 	Toast tos;
 	// 用來確認是否可以刪除的flag
 	boolean changeDeletable = false;
@@ -47,7 +49,8 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		deleteBatchBtn.setOnClickListener(this);
 		cancelDeleteAllBtn.setOnClickListener(this);
 		tos = Toast.makeText(this, "", Toast.LENGTH_LONG);
-		
+		searchBtn = (ImageButton) findViewById(R.id.searchBtn);
+		searchBtn.setOnClickListener(this);
 	}
 
 	@Override
@@ -125,26 +128,26 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		noteListAdapter.setNotifyOnChange(true);
 		lv.setAdapter(noteListAdapter);
 		lv.setOnItemClickListener(this);
-		inputSearch.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// MainActivity.this.adapter.getFilter().filter(s);
-				MainActivity.this.noteListAdapter.getFilter().filter(s);
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				// TODO Auto-generated method stub
-
-			}
-		});
+//		inputSearch.addTextChangedListener(new TextWatcher() {
+//
+//			@Override
+//			public void onTextChanged(CharSequence s, int start, int before, int count) {
+//				// MainActivity.this.adapter.getFilter().filter(s);
+//				MainActivity.this.noteListAdapter.getFilter().filter(s);
+//			}
+//
+//			@Override
+//			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//
+//			@Override
+//			public void afterTextChanged(Editable s) {
+//				// TODO Auto-generated method stub
+//
+//			}
+//		});
 	}
 
 	@Override
@@ -152,7 +155,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		int id = v.getId();
 		switch(id){
 			case R.id.deleteBatchBtn:
-				// TODO : add process to delete batch
+				// add process to delete batch
 				System.out.println(noteListAdapter.getDeleteIds().size());
 				idsToDelete = noteListAdapter.getDeleteIds();
 				String[] ids = idsToDelete.toArray(new String[0]);
@@ -166,7 +169,17 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			case R.id.cancelDeletebtn:
 				resetUnDelete();
 				break;
-			
+			case R.id.searchBtn:
+				String searchText = inputSearch.getText().toString().trim();
+				noteList.clear();
+				if(searchText.length() > 0){
+					noteList.addAll(noteDAO.getAllByTitle(searchText));
+				}
+				else{
+					noteList.addAll(noteDAO.getAll());
+				}
+				noteListAdapter.notifyDataSetChanged();
+				break;
 		}
 		
 	}

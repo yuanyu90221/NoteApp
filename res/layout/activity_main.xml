@@ -37,16 +37,16 @@
     <ListView
         android:id="@+id/listitem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dip"
         android:background="#eddf12" 
+        android:layout_weight="1"
         >
 
     </ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content" >
 
         <Button
             android:id="@+id/deleteBatchBtn"
