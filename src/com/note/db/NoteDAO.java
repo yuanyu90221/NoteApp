@@ -215,6 +215,23 @@ public class NoteDAO {
 	}
 	
 	/**
+	 * get notes by Title
+	 * 
+	 * @param title
+	 * @return
+	 */
+	public List<NoteVO> getAllByTitle(String title){
+		List<NoteVO> noteList = new ArrayList<NoteVO>();
+		String where = " WHERE "+TITLE + " LIKE '%" + title +"%'";
+		String orderBy = " ORDER BY "+CREATE_TIME + " DESC";
+		Cursor result = db.rawQuery("SELECT * FROM "+TB_NAME + where + orderBy, null);
+		while(result.moveToNext()){
+			noteList.add(getNote(result));
+		}
+		result.close();
+		return noteList;
+	}
+	/**
 	 * process cursor to NoteVO
 	 * 
 	 * @param cursor
