@@ -10,6 +10,7 @@ import com.note.vo.NoteListAdapter;
 import com.note.vo.NoteVO;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -27,6 +29,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * @description 主要查詢畫面的Activity
+ * 
+ * @author json
+ *
+ */
 public class MainActivity extends Activity implements OnClickListener,OnItemClickListener{
 
 	private ListView lv;
@@ -42,6 +50,21 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	// 用來確認是否可以刪除的flag
 	boolean changeDeletable = false;
     List<String> idsToDelete = new ArrayList<String>();
+    // 設定公用calendar變數
+    Calendar m_Calendar = Calendar.getInstance();
+    // 設定datepicker 用來監聽設定時間之後的動作
+	DatePickerDialog.OnDateSetListener datepicker = new DatePickerDialog.OnDateSetListener(){
+
+		@Override
+		public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+			m_Calendar.set(Calendar.YEAR, year);
+			m_Calendar.set(Calendar.MONTH, monthOfYear);
+			m_Calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+			doDateSearch(m_Calendar);
+		}
+		
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -122,25 +145,22 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		case R.id.action_query_todos:
 			// query todos 邏輯
 			filterText.setText(getResources().getString(R.string.query_todos));
-		    String queryTitle = inputSearch.getText().toString().trim();
-		    noteList.clear();
-		    Calendar c = Calendar.getInstance();
-		    if(queryTitle.length() == 0){
-		    	noteList.addAll(noteDAO.getAllByDate(c.getTimeInMillis()));
-		    }
-		    else{
-		    	NoteVO criteria = new NoteVO();
-		    	criteria.setTitle(queryTitle);
-		    	criteria.setCreateTime(c.getTimeInMillis());
-		    	noteList.addAll(noteDAO.getNotesByCriteria(criteria));
-		    }
-			noteListAdapter.notifyDataSetChanged();
-			special_query.setVisibility(View.VISIBLE);
+			Calendar c = Calendar.getInstance();
+			doDateSearch(c);
 			return true;
 		case R.id.action_query_after_date:
-			// TODO: add pick date logic
-//            filterText.setText(getResources().getString(R.string.query_after_date));
-//            special_query.setVisibility(View.VISIBLE);
+			// add pick date logic
+             filterText.setText(getResources().getString(R.string.query_after_date));
+			 // 設定DatePickerDialog樣式
+             DatePickerDialog dialog = new DatePickerDialog(
+											this, 
+											datepicker, 
+											m_Calendar.get(Calendar.YEAR), 
+											m_Calendar.get(Calendar.MONTH),
+											m_Calendar.get(Calendar.DAY_OF_MONTH));
+			// 顯示dialog直到 date被選取
+            dialog.show();
+			 
             return true;
 		case R.id.action_sample:
 			// 新增測試資料 邏輯
@@ -201,6 +221,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			case R.id.cancelDeletebtn:
 				// 回復未刪除狀態
 				resetUnDelete();
+				doSearch();
 				break;
 			case R.id.searchBtn:
 				// 做基本查詢
@@ -260,5 +281,26 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			noteList.addAll(noteDAO.getAll());
 		}
 		noteListAdapter.notifyDataSetChanged();
+	}
+	
+	/**
+	 * 執行用執行時間來選取記事
+	 * 
+	 * @param c
+	 */
+	public void doDateSearch(Calendar c){
+		String queryTitle = inputSearch.getText().toString().trim();
+	    noteList.clear();
+	    if(queryTitle.length() == 0){
+	    	noteList.addAll(noteDAO.getAllByDate(c.getTimeInMillis()));
+	    }
+	    else{
+	    	NoteVO criteria = new NoteVO();
+	    	criteria.setTitle(queryTitle);
+	    	criteria.setCreateTime(c.getTimeInMillis());
+	    	noteList.addAll(noteDAO.getNotesByCriteria(criteria));
+	    }
+		noteListAdapter.notifyDataSetChanged();
+		special_query.setVisibility(View.VISIBLE);
 	}
 }
