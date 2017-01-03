@@ -202,9 +202,9 @@ public class NoteDAO {
 	 */
 	public List<NoteVO> getAllByDate(long date){
 		List<NoteVO> noteList = new ArrayList<NoteVO>();
-		String where = " WHERE "+ CREATE_TIME + " >= " + date;
-		String orderBy = " ORDER BY "+CREATE_TIME + " DESC";
-		Cursor result = db.rawQuery("SELECT * from "+ TB_NAME + where + orderBy, null);
+		String where = CREATE_TIME + " >= " + date;
+		String orderBy = CREATE_TIME + " DESC";
+		Cursor result = db.query(TB_NAME, null, where, null, null, null, orderBy);
 		while(result.moveToNext()){
 			noteList.add(getNote(result));
 		}
@@ -220,9 +220,9 @@ public class NoteDAO {
 	 */
 	public List<NoteVO> getAllByTitle(String title){
 		List<NoteVO> noteList = new ArrayList<NoteVO>();
-		String where = " WHERE "+TITLE + " LIKE '%" + title +"%'";
-		String orderBy = " ORDER BY "+CREATE_TIME + " DESC";
-		Cursor result = db.rawQuery("SELECT * FROM "+TB_NAME + where + orderBy, null);
+		String where = TITLE + " LIKE '%" + title +"%'";
+		String orderBy = CREATE_TIME + " DESC";
+		Cursor result = db.query(TB_NAME, null, where, null, null, null, orderBy);
 		while(result.moveToNext()){
 			noteList.add(getNote(result));
 		}
