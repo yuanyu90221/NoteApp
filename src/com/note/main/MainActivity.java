@@ -10,7 +10,11 @@ import com.note.vo.NoteListAdapter;
 import com.note.vo.NoteVO;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,7 +39,7 @@ import android.widget.Toast;
  * @author json
  *
  */
-public class MainActivity extends Activity implements OnClickListener,OnItemClickListener{
+public class MainActivity extends Activity implements OnClickListener,OnItemClickListener,DialogInterface.OnClickListener{
 
 	private ListView lv;
 	private NoteDAO noteDAO = null;
@@ -168,8 +172,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			// 新增測試資料 邏輯
 			noteDAO = new NoteDAO(getApplicationContext());
 			noteDAO.sample();
-			noteList.clear();
-			noteList.addAll(noteDAO.getAll());
+			doSearch();
 			noteListAdapter.notifyDataSetChanged();
 			return true;
 		case R.id.action_delete_all:
@@ -179,11 +182,31 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			noteList.clear();
 			noteListAdapter.notifyDataSetChanged();
 			return true;
+		case R.id.action_about_us:
+			// about us
+			new AlertDialog.Builder(this)       
+	    	.setMessage("programdeveloperteam@gmail.com")
+	    	.setCancelable(false)
+	    	//.setIcon(R.drawable.b1)    	
+	    	.setTitle("  聯絡開發者的Email")
+	    	.setNegativeButton("立刻聯繫開發者", this)
+	    	.setPositiveButton("返回", null)	    	
+	    	.show(); // 顯示交談窗			 
+            return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 
 	}
+	
+	@Override
+    public void onClick(DialogInterface dialog, int id) {
+		if(id == DialogInterface.BUTTON_NEGATIVE) {
+			Intent it = new Intent(Intent.ACTION_VIEW);			
+		    it.setData(Uri.parse("mailto:programdeveloperteam@gmail.com"));
+		    startActivity(it);
+		}
+    }
 	
 	/**
 	 * 修改是否顯示checkbox

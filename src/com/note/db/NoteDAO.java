@@ -144,7 +144,7 @@ public class NoteDAO {
 	 * @description delete all note before input time
 	 * 
 	 * @param beforeTime
-	 * @return
+	 * @return whether have delete some note
 	 */
 	public boolean deleteBefore(long beforeTime){
 		String where = CREATE_TIME + "<" + beforeTime;
@@ -287,6 +287,9 @@ public class NoteDAO {
 		return note;
 	}
 	
+	/**
+	 * add some sample data
+	 */
 	public void sample(){
 		Calendar c = Calendar.getInstance();
 		c.set(2015, 1-1, 22, 10, 30);

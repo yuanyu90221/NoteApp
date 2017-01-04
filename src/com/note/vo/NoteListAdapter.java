@@ -16,6 +16,12 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * A self-made Adapter to render NoteList
+ * 
+ * @author json
+ *
+ */
 public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 
 	/**
@@ -28,6 +34,9 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 	 */
 	private List<NoteVO> noteList;
 	
+	/**
+	 * field: delete List
+	 */
 	private List<String> deleteIds = new ArrayList<String>();
 	/**
 	 * @description constructor 
@@ -119,10 +128,18 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 		return noteList.get(index);
 	}
 	
+	/**
+	 * clear delete list
+	 */
 	public void clearDeleteIds(){
 		deleteIds.clear();
 	}
 	
+	/**
+	 * return ids to delete
+	 * 
+	 * @return
+	 */
 	public List<String> getDeleteIds(){
 		return deleteIds;
 	}

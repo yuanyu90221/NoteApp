@@ -15,5 +15,6 @@
     <string name="cancelDeleteAll">取消</string>
     <string name="returnBtnStr">返回</string>
     <string name="no_data_str">目前沒有記事</string>
+    <string name="about_us">開發者的聯絡資訊</string>
 
 </resources>
