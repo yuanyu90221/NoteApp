@@ -70,14 +70,16 @@
         >
 
     </ListView>
+
     <TextView
-      android:id="@+id/no_data_view"
-      android:text="@string/no_data_str"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:textSize="20sp"
-      android:background="#eddf12"
-      android:gravity="center">
+        android:id="@+id/no_data_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#eddf12"
+        android:gravity="center"
+        android:text="@string/no_fit_search_item"
+        android:textSize="20sp" >
+
     </TextView>
     <LinearLayout
         android:layout_width="match_parent"
