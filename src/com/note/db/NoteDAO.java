@@ -5,7 +5,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import com.note.constant.Constant;
+import com.note.vo.NoteListAdapter;
 import com.note.vo.NoteVO;
 
 import android.content.ContentValues;
@@ -20,7 +26,7 @@ import android.database.sqlite.SQLiteDatabase;
  *
  */
 public class NoteDAO {
-	
+	private final Logger logger = Logger.getLogger(NoteListAdapter.class);
 	/**
 	 * TABLE NAME: memoList
 	 */
@@ -70,6 +76,8 @@ public class NoteDAO {
 	 */
 	public NoteDAO(Context context){
 		db = MyDBHelper.getDatabase(context);
+		Layout layout = new PatternLayout();
+		logger.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
 	}
 	
 	/**
@@ -296,13 +304,13 @@ public class NoteDAO {
 		NoteVO note1 = new NoteVO(0, c.getTimeInMillis(), 0, "測試1", "");
 		c.set(2017, 1-1, 22, 0, 30);
 		NoteVO note2 = new NoteVO(0, c.getTimeInMillis(), 0, "測試2", "");
-		System.out.println(note2);
+		logger.info(note2);
 		c.set(2016, 12-1, 31, 12, 30);
 		NoteVO note3 = new NoteVO(0, c.getTimeInMillis(), 0, "這是中文", "");
-		System.out.println(note3);
+		logger.info(note3);
 		c = Calendar.getInstance();
 		NoteVO note4 = new NoteVO(0, c.getTimeInMillis(), 0, "這是English", "");
-		System.out.println(note4);
+		logger.info(note4);
 		insert(note1);
 		insert(note2);
 		insert(note3);

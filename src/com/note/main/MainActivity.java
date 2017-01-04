@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import com.example.searchviewdm.R;
 import com.note.db.NoteDAO;
 import com.note.vo.NoteListAdapter;
@@ -41,6 +46,8 @@ import android.widget.Toast;
  */
 public class MainActivity extends Activity implements OnClickListener,OnItemClickListener,DialogInterface.OnClickListener{
 
+	// 使用logger
+	private final Logger logger = Logger.getLogger(MainActivity.class);
 	private ListView lv;
 	private NoteDAO noteDAO = null;
 	NoteListAdapter noteListAdapter;
@@ -98,6 +105,8 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		lv.setOnItemClickListener(this);
 		no_data_view = (TextView) findViewById(R.id.no_data_view);
 		lv.setEmptyView(no_data_view);
+		Layout layout = new PatternLayout();
+		logger.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
 		// 設定onTextWatcher
 		inputSearch.addTextChangedListener(new TextWatcher() {
 
@@ -141,7 +150,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 				setDeleteStatus();
 			}
 			else{
-				tos.setText("There is no notes to delete!");
+				tos.setText(getResources().getString(R.string.no_data_str));
 				tos.show();
 			}
 			return true;
@@ -222,7 +231,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	@Override
 	protected void onResume() {
 		super.onResume();
-		System.out.println("Resume");
+		logger.info("Resume");
 		// 更新畫面List
 		doSearch();
 		resetUnDelete();
@@ -235,10 +244,10 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		switch(id){
 			case R.id.deleteBatchBtn:
 				// add process to delete batch
-				System.out.println(noteListAdapter.getDeleteIds().size());
+				logger.info(noteListAdapter.getDeleteIds().size());
 				idsToDelete = noteListAdapter.getDeleteIds();
 				String[] ids = idsToDelete.toArray(new String[0]);
-				System.out.println("Note: before delete!");
+				logger.info("Note: before delete!");
 				noteDAO.batchDelete(ids);
 				doSearch();
 				resetUnDelete();
@@ -287,7 +296,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		//TODO: 新增update note 邏輯
 		NoteVO note = noteList.get(position);	
-		System.out.println("NOTE: "+ note);
+		logger.info("NOTE: "+ note);
 		
 	}
 	
@@ -297,7 +306,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	public void doSearch(){
 		// 取得基本查詢的值
 		String searchText = inputSearch.getText().toString().trim();
-		System.out.println("searchText: "+ searchText);
+		logger.info("searchText: "+ searchText);
 		noteList.clear();
 		if(searchText.length() > 0){
 			noteList.addAll(noteDAO.getAllByTitle(searchText));

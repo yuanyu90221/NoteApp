@@ -3,6 +3,11 @@ package com.note.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Layout;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import com.example.searchviewdm.R;
 
 import android.content.Context;
@@ -23,6 +28,9 @@ import android.widget.TextView;
  *
  */
 public class NoteListAdapter extends ArrayAdapter<NoteVO>{
+
+	private final Logger logger = Logger.getLogger(NoteListAdapter.class);
+	
 
 	/**
 	 * field: layout resource
@@ -56,7 +64,8 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LinearLayout itemView;
-		
+		Layout layout = new PatternLayout();
+		logger.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
 		final NoteVO note = getItem(position);
 		
 		if (convertView == null) {
@@ -86,10 +95,10 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 			
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				String id = Long.toString(note.get_id());
-				System.out.println("NOTE: "+ id);
+				logger.info("NOTE: "+ id);
 				
 				int pos = deleteIds.indexOf(id); 
-				System.out.println("NOTE: pos = "+ pos);
+				logger.info("NOTE: pos = "+ pos);
 				if(isChecked){
 					if(pos==-1){
 						deleteIds.add(id);
