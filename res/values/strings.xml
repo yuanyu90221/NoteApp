@@ -16,5 +16,6 @@
     <string name="returnBtnStr">返回</string>
     <string name="no_data_str">目前沒有記事</string>
     <string name="about_us">開發者的聯絡資訊</string>
+    <string name="title_activity_main_activity_note">備忘錄</string>
 
 </resources>
