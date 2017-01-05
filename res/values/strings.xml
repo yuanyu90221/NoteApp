@@ -18,5 +18,10 @@
     <string name="about_us">開發者的聯絡資訊</string>
     <string name="title_activity_main_activity_note">備忘錄</string>
     <string name="no_fit_search_item">沒有符合條件記事</string>
+    <string name="copy_note">建立副本</string>
+    <string name="note_title_should_not_null">標題不得為空</string>
+    <string name="note_title_hint">請輸入記事標題</string>
+    <string name="confirm_exec_time">確認</string>
+    <string name="datetimepicker_title">選擇執行時間</string>
 
 </resources>

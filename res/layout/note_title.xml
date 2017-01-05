@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+
+    <EditText
+        android:id="@+id/note_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="6"
+        android:ems="10"
+        android:hint="@string/note_title_hint" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_copy_note"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:layout_weight="3"
+        android:background="#00aa00"
+        android:text="@string/copy_note"
+        android:textSize="16sp" />
+
+</LinearLayout>

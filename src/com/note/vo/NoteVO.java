@@ -1,5 +1,6 @@
 package com.note.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
@@ -9,7 +10,7 @@ import java.util.Locale;
  * @author json
  *
  */
-public class NoteVO {
+public class NoteVO implements Serializable{
 	
 	/**
 	 * field :id

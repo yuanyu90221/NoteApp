@@ -9,14 +9,16 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    
     tools:context="com.example.searchviewdm.MainActivityNote" >
 
     <LinearLayout
+        android:id="@+id/editTimeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/label_exec_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -34,9 +36,12 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/contentText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="top|left"
+        android:singleLine="false"
+        
         android:layout_weight="0.11"
         android:ems="10"
         android:inputType="textMultiLine"

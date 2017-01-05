@@ -33,4 +33,9 @@ public final class Constant {
 	 * Action value : delete
 	 */
 	public static final String DELETE = "delete";
+	
+	/**
+	 * Bundle key: noteVo
+	 */
+	public static final String NOTEVO = "noteVo";
 }

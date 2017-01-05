@@ -62,7 +62,7 @@ public class NoteDAO {
 	static final String createTable = "CREATE TABLE IF NOT EXISTS " + TB_NAME + " ("
             + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + CREATE_TIME + " INTEGER NOT NULL,"
-            + EXEC_TIME + " INTEGER,"    
+            + EXEC_TIME + " INTEGER NOT NULL,"    
             + TITLE + " VARCHAR(50) NOT NULL,"
             + CONTENT + " TEXT)";
 	
@@ -168,6 +168,16 @@ public class NoteDAO {
 		return db.delete(TB_NAME, null, null);
 	}
 	
+	/**
+	 * @description delete note by id
+	 * 
+	 * @param _id
+	 * @return
+	 */
+	public boolean deleteById(long _id){
+		String where = _ID +"="+Long.toString(_id);
+		return db.delete(TB_NAME, where,null) > 0;
+	}
 	/**
 	 * @description get all the notes
 	 * 
@@ -301,15 +311,15 @@ public class NoteDAO {
 	public void sample(){
 		Calendar c = Calendar.getInstance();
 		c.set(2015, 1-1, 22, 10, 30);
-		NoteVO note1 = new NoteVO(0, c.getTimeInMillis(), 0, "測試1", "");
+		NoteVO note1 = new NoteVO(0, c.getTimeInMillis(), c.getTimeInMillis(), "測試1", "測試內文1");
 		c.set(2017, 1-1, 22, 0, 30);
-		NoteVO note2 = new NoteVO(0, c.getTimeInMillis(), 0, "測試2", "");
+		NoteVO note2 = new NoteVO(0, c.getTimeInMillis(), c.getTimeInMillis(), "測試2", "測試內文2");
 		logger.info(note2);
 		c.set(2016, 12-1, 31, 12, 30);
-		NoteVO note3 = new NoteVO(0, c.getTimeInMillis(), 0, "這是中文", "");
+		NoteVO note3 = new NoteVO(0, c.getTimeInMillis(), c.getTimeInMillis(), "這是中文", "");
 		logger.info(note3);
 		c = Calendar.getInstance();
-		NoteVO note4 = new NoteVO(0, c.getTimeInMillis(), 0, "這是English", "");
+		NoteVO note4 = new NoteVO(0, c.getTimeInMillis(), c.getTimeInMillis(), "這是English", "");
 		logger.info(note4);
 		insert(note1);
 		insert(note2);

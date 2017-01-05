@@ -9,7 +9,9 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
+import com.example.searchviewdm.MainActivityNote;
 import com.example.searchviewdm.R;
+import com.note.constant.Constant;
 import com.note.db.NoteDAO;
 import com.note.vo.NoteListAdapter;
 import com.note.vo.NoteVO;
@@ -156,6 +158,9 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			return true;
 		case R.id.action_add:
 			// TODO :新增 note 邏輯
+			Intent it = new Intent(this,MainActivityNote.class);
+			it.putExtra(Constant.IT_ACTION, Constant.ADD);
+			startActivity(it);
 			return true;
 		case R.id.action_query_todos:
 			// query todos 邏輯
@@ -297,7 +302,12 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		//TODO: 新增update note 邏輯
 		NoteVO note = noteList.get(position);	
 		logger.info("NOTE: "+ note);
-		
+		Intent it = new Intent(this, MainActivityNote.class);
+		it.putExtra(Constant.IT_ACTION, Constant.MODIFY);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Constant.NOTEVO, note);
+		it.putExtras(bundle);
+		startActivity(it);
 	}
 	
 	/**
