@@ -13,6 +13,11 @@ import java.util.Locale;
 public class NoteVO implements Serializable{
 	
 	/**
+	 * field SID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
 	 * field :id
 	 */
 	private long _id;
