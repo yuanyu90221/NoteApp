@@ -257,17 +257,11 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 					logger.info("Note: before delete!");
 					noteDAO.batchDelete(ids);
 				}
-				doSearch();
-				resetUnDelete();
-				break;
 			case R.id.cancelDeletebtn:
-				// 回復未刪除狀態
-				resetUnDelete();
-				doSearch();
-				break;
 			case R.id.searchBtn:
-				// 做基本查詢
+				// 回復未刪除狀態
 				doSearch();
+				resetUnDelete();
 				break;
 			case R.id.returnBtn:
 				// 做基本查詢 回復基本查詢狀態
@@ -287,6 +281,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		deleteBatchBtn.setVisibility(View.GONE);
 		cancelDeleteAllBtn.setVisibility(View.GONE);
 		noteListAdapter.clearDeleteIds();
+		noteListAdapter.setRefreshCheckBoxFlag(true);
 	}
 	
 	/**
@@ -298,6 +293,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		deleteBatchBtn.setVisibility(View.VISIBLE);
 		cancelDeleteAllBtn.setVisibility(View.VISIBLE);
 		noteListAdapter.clearDeleteIds();
+		noteListAdapter.setRefreshCheckBoxFlag(false);
 	}
 
 	@Override

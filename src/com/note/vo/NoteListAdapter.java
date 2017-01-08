@@ -46,6 +46,20 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 	 * field: delete List
 	 */
 	private List<String> deleteIds = new ArrayList<String>();
+	
+	/**
+	 * field: flag to refresh Checkbox
+	 */
+	private boolean refreshCheckBoxFlag = false;
+	
+	public boolean isRefreshCheckBoxFlag() {
+		return refreshCheckBoxFlag;
+	}
+
+	public void setRefreshCheckBoxFlag(boolean refreshCheckBoxFlag) {
+		this.refreshCheckBoxFlag = refreshCheckBoxFlag;
+	}
+
 	/**
 	 * @description constructor 
 	 * 
@@ -91,27 +105,26 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 		createTime.setText(note.getFormatCreateTime());
 		int visibility = note.isDeletable() == true ? View.VISIBLE: View.GONE;
 		deleteChk.setVisibility(visibility);
-		logger.info("NOTE: position = "+ position+", isCheck = " + note.isChecked());
-		deleteChk.setChecked(note.isChecked());
+		if(refreshCheckBoxFlag==true)
+		{
+			deleteChk.setChecked(false);
+		}
 		deleteChk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				NoteVO currNote = noteList.get(currentPos);
 				String id = Long.toString(currNote.get_id());
 				int pos = deleteIds.indexOf(id); 
-				if(isChecked){
+				if(isChecked == true){
 					if(pos==-1){
 						deleteIds.add(id);
 					}
-					currNote.setChecked(true);
 				}
 				else{
 					if(pos!=-1){
 						deleteIds.remove(id);
 					}
-					currNote.setChecked(false);
 				}
-				logger.info(String.format("Note: id = %03d, position = %4d, isChecked = %b ",currNote.get_id() , currentPos, currNote.isChecked()));
 			}
 		});
 		return itemView;
