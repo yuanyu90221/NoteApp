@@ -102,16 +102,16 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 				if(isChecked){
 					if(pos==-1){
 						deleteIds.add(id);
-						currNote.setChecked(true);
 					}
+					currNote.setChecked(true);
 				}
 				else{
 					if(pos!=-1){
 						deleteIds.remove(id);
-						currNote.setChecked(false);
-
 					}
+					currNote.setChecked(false);
 				}
+				logger.info(String.format("Note: id = %03d, position = %4d, isChecked = %b ",currNote.get_id() , currentPos, currNote.isChecked()));
 			}
 		});
 		return itemView;
