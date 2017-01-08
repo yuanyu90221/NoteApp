@@ -64,6 +64,7 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LinearLayout itemView;
+		final int currentPos = position;
 		Layout layout = new PatternLayout();
 		logger.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
 		final NoteVO note = getItem(position);
@@ -84,7 +85,7 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 		TextView createTime = (TextView) itemView.findViewById(R.id.create_time);
 		CheckBox deleteChk = (CheckBox) itemView.findViewById(R.id.deleteChk);
 		
-		// 
+		// 把資料放入itemView
 		title.setText(note.getTitle());
 		createDate.setText(note.getFormatCreateDate());
 		createTime.setText(note.getFormatCreateTime());
@@ -95,21 +96,19 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 		deleteChk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				String id = Long.toString(note.get_id());
-				logger.info("NOTE: id = "+ id);
-				
+				NoteVO currNote = noteList.get(currentPos);
+				String id = Long.toString(currNote.get_id());
 				int pos = deleteIds.indexOf(id); 
-				logger.info("NOTE: pos = "+ pos+", isCheck = " + note.isChecked());
 				if(isChecked){
 					if(pos==-1){
 						deleteIds.add(id);
-						note.setChecked(true);
+						currNote.setChecked(true);
 					}
 				}
 				else{
 					if(pos!=-1){
 						deleteIds.remove(id);
-						note.setChecked(false);
+						currNote.setChecked(false);
 
 					}
 				}
