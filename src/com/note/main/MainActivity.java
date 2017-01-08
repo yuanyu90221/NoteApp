@@ -249,11 +249,14 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		switch(id){
 			case R.id.deleteBatchBtn:
 				// add process to delete batch
+			
 				logger.info(noteListAdapter.getDeleteIds().size());
 				idsToDelete = noteListAdapter.getDeleteIds();
-				String[] ids = idsToDelete.toArray(new String[0]);
-				logger.info("Note: before delete!");
-				noteDAO.batchDelete(ids);
+				if(idsToDelete.size() > 0){
+					String[] ids = idsToDelete.toArray(new String[0]);
+					logger.info("Note: before delete!");
+					noteDAO.batchDelete(ids);
+				}
 				doSearch();
 				resetUnDelete();
 				break;

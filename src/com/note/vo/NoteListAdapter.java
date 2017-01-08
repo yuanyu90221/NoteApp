@@ -90,23 +90,27 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 		createTime.setText(note.getFormatCreateTime());
 		int visibility = note.isDeletable() == true ? View.VISIBLE: View.GONE;
 		deleteChk.setVisibility(visibility);
-		deleteChk.setChecked(false);
+		logger.info("NOTE: position = "+ position+", isCheck = " + note.isChecked());
+		deleteChk.setChecked(note.isChecked());
 		deleteChk.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				String id = Long.toString(note.get_id());
-				logger.info("NOTE: "+ id);
+				logger.info("NOTE: id = "+ id);
 				
 				int pos = deleteIds.indexOf(id); 
-				logger.info("NOTE: pos = "+ pos);
+				logger.info("NOTE: pos = "+ pos+", isCheck = " + note.isChecked());
 				if(isChecked){
 					if(pos==-1){
 						deleteIds.add(id);
+						note.setChecked(true);
 					}
 				}
 				else{
 					if(pos!=-1){
 						deleteIds.remove(id);
+						note.setChecked(false);
+
 					}
 				}
 			}
