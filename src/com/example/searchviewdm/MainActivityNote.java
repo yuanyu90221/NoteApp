@@ -277,7 +277,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		final View item = LayoutInflater.from(MainActivityNote.this).inflate(R.layout.datetimepicker, null);
 		AlertDialog.Builder chooser = new AlertDialog.Builder(MainActivityNote.this);
 		chooser.setView(item);
-
+		
 		chooser.setTitle(R.string.datetimepicker_title);
 		chooser.setPositiveButton(R.string.confirm_exec_time, new DialogInterface.OnClickListener() {
 			
