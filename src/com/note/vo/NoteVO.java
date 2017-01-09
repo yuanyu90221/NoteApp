@@ -48,6 +48,16 @@ public class NoteVO implements Serializable{
 	 */
 	private boolean deletable = false;
 	
+	private boolean isCheck = false;
+	
+	public boolean isCheck() {
+		return isCheck;
+	}
+
+	public void setCheck(boolean isCheck) {
+		this.isCheck = isCheck;
+	}
+
 	public boolean isDeletable() {
 		return deletable;
 	}
