@@ -47,18 +47,6 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 	 */
 	private List<String> deleteIds = new ArrayList<String>();
 	
-////	/**
-////	 * field: flag to refresh Checkbox
-////	 */
-////	private boolean refreshCheckBoxFlag = false;
-//	
-//	public boolean isRefreshCheckBoxFlag() {
-//		return refreshCheckBoxFlag;
-//	}
-//
-//	public void setRefreshCheckBoxFlag(boolean refreshCheckBoxFlag) {
-//		this.refreshCheckBoxFlag = refreshCheckBoxFlag;
-//	}
 
 	/**
 	 * @description constructor 
@@ -105,24 +93,29 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 		createTime.setText(note.getFormatCreateTime());
 		int visibility = note.isDeletable() == true ? View.VISIBLE: View.GONE;
 		deleteChk.setVisibility(visibility);
+		// 取消掉原本checkbox的點擊功能
 		deleteChk.setFocusable(false);
 		deleteChk.setFocusableInTouchMode(false);
 		deleteChk.setClickable(false);
+		// 根據傳入的note來決定顯示check或uncheck
 		deleteChk.setChecked(note.isCheck());
+		// 找尋目前的note
 		NoteVO currNote = noteList.get(currentPos);
 		String id = Long.toString(currNote.get_id());
+		// 確認該id是否在deleteIds
 		int pos = deleteIds.indexOf(id); 
+		
 		if(deleteChk.isChecked()){
 			if(pos==-1){
+				//如果所選的item不在deleteIds且為check，則把id放入
 				deleteIds.add(id);
 			}
-			currNote.setCheck(true);
 		}
 		else{
 			if(pos!=-1){
+				//如果所選的item在deleteIds且為uncheck，則把id移除
 				deleteIds.remove(id);
 			}
-			currNote.setCheck(false);
 		}
 		logger.info(String.format("Note: id = %03d, position = %4d, isChecked = %b ",currNote.get_id() , currentPos, currNote.isCheck()));
 		return itemView;

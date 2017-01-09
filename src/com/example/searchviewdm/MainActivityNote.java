@@ -78,10 +78,10 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		// 取得ActionBar
 		bar = getActionBar();
 		//顯示返回的箭頭，並可通過onOptionsItemSelected()進行監聽，其資源ID為android.R.id.home。
-		bar.setDisplayHomeAsUpEnabled(true);		
+		bar.setHomeButtonEnabled(true);
 		// 設定 ActionBar display
 		bar.setCustomView(R.layout.note_title);
-		bar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM|ActionBar.DISPLAY_SHOW_HOME);
+		bar.setDisplayShowCustomEnabled(true);
 		
 		button_delete = (Button) findViewById(R.id.button_Delete);
 		button_save = (Button) findViewById(R.id.button_Save);

@@ -281,7 +281,6 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		deleteBatchBtn.setVisibility(View.GONE);
 		cancelDeleteAllBtn.setVisibility(View.GONE);
 		noteListAdapter.clearDeleteIds();
-//		noteListAdapter.setRefreshCheckBoxFlag(true);
 	}
 	
 	/**
@@ -293,14 +292,13 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		deleteBatchBtn.setVisibility(View.VISIBLE);
 		cancelDeleteAllBtn.setVisibility(View.VISIBLE);
 		noteListAdapter.clearDeleteIds();
-//		noteListAdapter.setRefreshCheckBoxFlag(false);
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		//TODO: 新增update note 邏輯
 		NoteVO note = noteList.get(position);	
 		if(changeDeletable!=true){
+			// update note 邏輯
 			logger.info("NOTE: "+ note);
 			Intent it = new Intent(this, MainActivityNote.class);
 			it.putExtra(Constant.IT_ACTION, Constant.MODIFY);
@@ -310,6 +308,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			startActivity(it);
 		}
 		else{
+			// 刪除 click Item
 			note.setCheck(!note.isCheck());
 			noteListAdapter.set(position, note);
 		}
