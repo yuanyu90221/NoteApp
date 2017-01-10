@@ -3,11 +3,6 @@ package com.note.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Layout;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-
 import com.example.searchviewdm.R;
 
 import android.content.Context;
@@ -16,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,9 +21,6 @@ import android.widget.TextView;
  *
  */
 public class NoteListAdapter extends ArrayAdapter<NoteVO>{
-
-	private final Logger logger = Logger.getLogger(NoteListAdapter.class);
-	
 
 	/**
 	 * field: layout resource
@@ -66,11 +56,8 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		LinearLayout itemView;
-		final int currentPos = position;
-		Layout layout = new PatternLayout();
-		logger.addAppender(new ConsoleAppender(layout, ConsoleAppender.SYSTEM_OUT));
 		final NoteVO note = getItem(position);
-		
+		// 第一次建立範本會是null, 第二次之後會沿用第一次的範本
 		if (convertView == null) {
 			// 建立項目畫面元件
 			itemView = new LinearLayout(getContext());
@@ -100,8 +87,7 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 		// 根據傳入的note來決定顯示check或uncheck
 		deleteChk.setChecked(note.isCheck());
 		// 找尋目前的note
-		NoteVO currNote = noteList.get(currentPos);
-		String id = Long.toString(currNote.get_id());
+		String id = Long.toString(note.get_id());
 		// 確認該id是否在deleteIds
 		int pos = deleteIds.indexOf(id); 
 		
@@ -117,7 +103,6 @@ public class NoteListAdapter extends ArrayAdapter<NoteVO>{
 				deleteIds.remove(id);
 			}
 		}
-		logger.info(String.format("Note: id = %03d, position = %4d, isChecked = %b ",currNote.get_id() , currentPos, currNote.isCheck()));
 		return itemView;
 	}
 	
