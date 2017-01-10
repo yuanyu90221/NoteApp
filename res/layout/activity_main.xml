@@ -19,7 +19,7 @@
 	         android:background="@drawable/rounded_edittext"
 	         android:ems="10"
 	         android:hint="@string/search_bar_hint"
-	         android:inputType="textVisiblePassword" >
+	          >
 
 	         <requestFocus />
 	     </EditText>
