@@ -220,7 +220,7 @@ public class NoteDAO {
 	 */
 	public List<NoteVO> getAllByDate(long date){
 		List<NoteVO> noteList = new ArrayList<NoteVO>();
-		String where = CREATE_TIME + " >= " + date;
+		String where = EXEC_TIME + " >= " + date;
 		String orderBy = CREATE_TIME + " DESC";
 		Cursor result = db.query(TB_NAME, null, where, null, null, null, orderBy);
 		while(result.moveToNext()){

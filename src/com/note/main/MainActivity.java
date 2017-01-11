@@ -102,8 +102,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		noteDAO = new NoteDAO(getApplicationContext());
 		noteList = noteDAO.getAll();
 		noteListAdapter = new NoteListAdapter(this, R.layout.notelist, noteList);
-		// 設定 自動更新 
-		noteListAdapter.setNotifyOnChange(true);
+		
 		lv.setAdapter(noteListAdapter);
 		lv.setOnItemClickListener(this);
 		no_data_view = (TextView) findViewById(R.id.no_data_view);
@@ -194,6 +193,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			noteDAO = new NoteDAO(getApplicationContext());
 			noteDAO.deleteAll();
 			noteList.clear();
+			noteListAdapter.notifyDataSetInvalidated();
 			return true;
 		case R.id.action_about_us:
 			// about us
@@ -326,6 +326,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		else{
 			noteList.addAll(noteDAO.getAll());
 		}
+		noteListAdapter.notifyDataSetInvalidated();
 	}
 	
 	/**
@@ -345,6 +346,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	    	criteria.setCreateTime(c.getTimeInMillis());
 	    	noteList.addAll(noteDAO.getNotesByCriteria(criteria));
 	    }
+	    noteListAdapter.notifyDataSetInvalidated();
 		special_query.setVisibility(View.VISIBLE);
 	}
 }

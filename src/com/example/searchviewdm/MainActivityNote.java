@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 public class MainActivityNote extends Activity implements OnClickListener{
     
@@ -42,6 +43,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 	private TextView txv_editTime = null, txv_executeTime = null;
 	private LinearLayout editTimeLayout = null;
 	private Calendar exec_time = Calendar.getInstance();
+	private Toast tos = null;
 	TextView exec_date_picker = null, exec_time_picker = null;
 	// set datepicker
 	DatePickerDialog.OnDateSetListener datepicker = new DatePickerDialog.OnDateSetListener(){
@@ -97,7 +99,9 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		txv_executeTime.setOnClickListener(this);
         bar.setIcon(getResources().getDrawable(R.drawable.left_48));
         editTimeLayout = (LinearLayout) findViewById(R.id.editTimeLayout);
+        tos = Toast.makeText(this, "", Toast.LENGTH_LONG);
         processIntent();
+        
 	
 	}
 
@@ -168,6 +172,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 				    else{
 				      note_title.setHint(getResources().getString(R.string.note_title_should_not_null));
 				      note_title.setHintTextColor(Color.RED);
+				      showHintAlertDialog();
 				    }
 				break;
 			case R.id.btn_copy_note:
@@ -183,7 +188,8 @@ public class MainActivityNote extends Activity implements OnClickListener{
 				    else{
 				    	note_title.setHint(getResources().getString(R.string.note_title_should_not_null));	
 				    	note_title.setHintTextColor(Color.RED);
-				    }
+			    	    showHintAlertDialog();
+				       }
 				break;
 			case R.id.txv_executeTime:// start alertDialog to pickTime
 				customDialogShow();
@@ -297,4 +303,33 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		exec_time_picker.setOnClickListener(this);
 		chooser.show();
 	}
+	
+	/**
+	 * 顯示輸入標題不得為空Dialog提示
+	 */
+	public void showHintAlertDialog(){
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivityNote.this);
+ 	    alertDialog.setMessage(getResources().getString(R.string.note_title_should_not_null));
+	     
+ 	    alertDialog.setPositiveButton(R.string.confirm_btn_str, new DialogInterface.OnClickListener() {
+				
+ 	    		@Override
+ 	    		public void onClick(DialogInterface dialog, int which) {
+					
+ 	    			dialog.dismiss();
+					
+ 	    		}
+				}
+ 	     );
+	     alertDialog.show();
+    }
+	
+	/**
+	 * 顯示輸入標題不得為空Toast提示
+	 */
+	public void showHintToast(){
+		tos.setText(getResources().getString(R.string.note_title_should_not_null));
+		tos.show();
+	}
+	
 }

@@ -3,13 +3,13 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#994d00"
+    android:background="#FFF"
     android:orientation="vertical"
     tools:context="com.note.main.MainActivity" >
 
 	 <LinearLayout
 	     android:layout_width="match_parent"
-	     android:layout_height="24dp" >
+	     android:layout_height="wrap_content" >
 
 	     <EditText
 	         android:id="@+id/searchBar"
@@ -17,7 +17,10 @@
 	         android:layout_height="24dp"
 	         android:layout_weight="6"
 	         android:background="@drawable/rounded_edittext"
-	         android:ems="10"
+	         android:textSize="18dp"
+	         android:paddingLeft="10dp"
+	         android:layout_marginTop="5dp"
+	         android:layout_marginBottom="5dp"
 	         android:hint="@string/search_bar_hint"
 	          >
 
@@ -31,6 +34,8 @@
 	         android:layout_weight="1"
 	         android:background="@drawable/rounded_imgbtn"
 	         android:src="@drawable/search_24" 
+	         android:layout_marginTop="5dp"
+	         android:layout_marginBottom="5dp"
 	         android:contentDescription="@string/search_bar_hint"/>
 	 </LinearLayout>
 
@@ -39,6 +44,7 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="40dp"
 	    android:orientation="horizontal" 
+	    android:background="#994d00"
 	    android:visibility="gone">
 
 	    <TextView

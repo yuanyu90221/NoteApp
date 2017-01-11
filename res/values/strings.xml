@@ -23,5 +23,6 @@
     <string name="note_title_hint">請輸入記事標題</string>
     <string name="confirm_exec_time">確認</string>
     <string name="datetimepicker_title">選擇執行時間</string>
+    <string name="confirm_btn_str">確認</string>
 
 </resources>
