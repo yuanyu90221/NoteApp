@@ -68,6 +68,7 @@ public class NoteReceiver extends BroadcastReceiver {
 				PendingIntent pi = PendingIntent.getActivity(context, 1, notifyIt, PendingIntent.FLAG_UPDATE_CURRENT);
 				nb.setContentIntent(pi);
 				Notification notifyNote = nb.build();
+				
 				// 發出intent 並且設定每個notify的識別碼 可以用來做cancel使用
 				nm.notify((int)_id, notifyNote);
 			}

@@ -158,8 +158,8 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		String currentTitle = "";
 		switch(id){
 			case R.id.button_Delete:
+					cancelBeforeAlarmManager(noteDAO.getById(_id));
 					noteDAO.deleteById(_id);
-					nm.cancel((int)_id);
 					finish();
 				break;
 			case R.id.button_Save:
@@ -169,6 +169,8 @@ public class MainActivityNote extends Activity implements OnClickListener{
 				    if(currentTitle.length() > 0){
 				    	NoteVO note = getCurrentValues();
 					    if(visibily==View.VISIBLE){ // update
+					    	//取消之前的notify
+					    	cancelBeforeAlarmManager(noteDAO.getById(_id));
 					    	note.set_id(_id);
 					    	noteDAO.update(note);
 					    	
@@ -221,7 +223,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 						                          this, 
 						                          timepicker, 
 						                          exec_time.get(Calendar.HOUR_OF_DAY),
-						                          exec_time.get(Calendar.HOUR), 
+						                          exec_time.get(Calendar.MINUTE), 
 						                          true);
 				timeDialog.show();
 				break;
@@ -367,6 +369,33 @@ public class MainActivityNote extends Activity implements OnClickListener{
 	         
 		    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		    am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+		}
+	}
+	
+	/**
+	 * 取消之前的AlartManager Event
+	 * 
+	 * @param note
+	 */
+	public void cancelBeforeAlarmManager(NoteVO note){
+		if(note!=null){
+			// 設定 註冊alarmManager時間為執行時間30分鐘之前
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(note.getExecTime());
+			cal.add(Calendar.MINUTE, -30);
+			Intent intent = new Intent(this, NoteReceiver.class);
+			intent.putExtra(Constant.IT_ACTION, Constant.MODIFY);
+			// 只要 action、data、type、class、category 這幾個屬性其中有一個不同，則系統就會視為不同的 Intent
+			// 在此設定category 利用日期字串 來區別每一個intent為不同intents
+			// 註解: "%tc"格式為 :星期六 十月 27 14:21:20 CST 2007 精準度到秒
+			intent.addCategory(String.format(Locale.getDefault(), "%tc", new Date(cal.getTimeInMillis())));
+			Bundle bundle = new Bundle();
+			bundle.putSerializable(Constant.NOTEVO, note);
+			intent.putExtras(bundle);
+			PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	         
+		    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		    am.cancel(pi);
 		}
 	}
 }
