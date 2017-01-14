@@ -185,12 +185,6 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
             dialog.show();
 			 
             return true;
-		case R.id.action_sample:
-			// 新增測試資料 邏輯
-			noteDAO = new NoteDAO(getApplicationContext());
-			noteDAO.sample();
-			doSearch();
-			return true;
 		case R.id.action_delete_all:
 			// delete all notes
 			noteDAO = new NoteDAO(getApplicationContext());

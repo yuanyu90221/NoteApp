@@ -23,12 +23,6 @@
         android:showAsAction="never"
         android:title="@string/query_after_date"/>
 	<item
-	    android:id="@+id/action_sample"
-	    android:orderInCategory="100"
-	    android:showAsAction="never"
-	    android:title="@string/sample_btn"
-	    />
-	<item
 	    android:id="@+id/action_delete_all"
 	    android:orderInCategory="100"
 	    android:showAsAction="never"

@@ -4,16 +4,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import com.note.broadcast.NoteReceiver;
 import com.note.constant.Constant;
 import com.note.db.NoteDAO;
 import com.note.vo.NoteVO;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -45,6 +50,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 	private Calendar exec_time = Calendar.getInstance();
 	private Toast tos = null;
 	TextView exec_date_picker = null, exec_time_picker = null;
+	private NotificationManager nm = null;
 	// set datepicker
 	DatePickerDialog.OnDateSetListener datepicker = new DatePickerDialog.OnDateSetListener(){
 
@@ -100,6 +106,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
         bar.setIcon(getResources().getDrawable(R.drawable.left_48));
         editTimeLayout = (LinearLayout) findViewById(R.id.editTimeLayout);
         tos = Toast.makeText(this, "", Toast.LENGTH_LONG);
+        nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         processIntent();
         
 	
@@ -152,6 +159,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		switch(id){
 			case R.id.button_Delete:
 					noteDAO.deleteById(_id);
+					nm.cancel((int)_id);
 					finish();
 				break;
 			case R.id.button_Save:
@@ -163,10 +171,12 @@ public class MainActivityNote extends Activity implements OnClickListener{
 					    if(visibily==View.VISIBLE){ // update
 					    	note.set_id(_id);
 					    	noteDAO.update(note);
+					    	
 					    }
 					    else{ //insert
 					    	noteDAO.insert(note);
 					    }
+					    pushToAlartManager(note);
 					    finish();
 				    }
 				    else{
@@ -183,6 +193,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 					    Calendar c = Calendar.getInstance();
 					    note.setCreateTime(c.getTimeInMillis());
 					    noteDAO.insert(note);
+					    pushToAlartManager(note);
 					    finish();
 				    }
 				    else{
@@ -316,9 +327,9 @@ public class MainActivityNote extends Activity implements OnClickListener{
  	    		@Override
  	    		public void onClick(DialogInterface dialog, int which) {
 					
- 	    			dialog.dismiss();
+ 	    				dialog.dismiss();
 					
- 	    		}
+ 	    			}
 				}
  	     );
 	     alertDialog.show();
@@ -332,4 +343,30 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		tos.show();
 	}
 	
+	/**
+	 * 把note資料設定於 execute_time 30分鐘之前提醒
+	 * 
+	 * @param note
+	 */
+	public void pushToAlartManager(NoteVO note){
+		if(note!=null){
+			// 設定 註冊alarmManager時間為執行時間30分鐘之前
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(note.getExecTime());
+			cal.add(Calendar.MINUTE, -30);
+			Intent intent = new Intent(this, NoteReceiver.class);
+			intent.putExtra(Constant.IT_ACTION, Constant.MODIFY);
+			// 只要 action、data、type、class、category 這幾個屬性其中有一個不同，則系統就會視為不同的 Intent
+			// 在此設定category 利用日期字串 來區別每一個intent為不同intents
+			// 註解: "%tc"格式為 :星期六 十月 27 14:21:20 CST 2007 精準度到秒
+			intent.addCategory(String.format(Locale.getDefault(), "%tc", new Date(cal.getTimeInMillis())));
+			Bundle bundle = new Bundle();
+			bundle.putSerializable(Constant.NOTEVO, note);
+			intent.putExtras(bundle);
+			PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+	         
+		    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		    am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+		}
+	}
 }
