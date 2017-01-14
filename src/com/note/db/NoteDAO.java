@@ -213,12 +213,12 @@ public class NoteDAO {
 	}
 	
 	/**
-	 * @description get all the note after date
+	 * @description get all the note after execution date
 	 * 
 	 * @param date
-	 * @return all the note after date
+	 * @return all the note after execution date
 	 */
-	public List<NoteVO> getAllByDate(long date){
+	public List<NoteVO> getAllByExecDate(long date){
 		List<NoteVO> noteList = new ArrayList<NoteVO>();
 		String where = EXEC_TIME + " >= " + date;
 		String orderBy = CREATE_TIME + " DESC";
@@ -230,6 +230,23 @@ public class NoteDAO {
 		return noteList;
 	}
 	
+	/**
+	 * @description get all the note after create date
+	 * 
+	 * @param date
+	 * @return all the note after create date
+	 */
+	public List<NoteVO> getAllByCreateDate(long date){
+		List<NoteVO> noteList = new ArrayList<NoteVO>();
+		String where = CREATE_TIME + " >= " + date;
+		String orderBy = CREATE_TIME + " DESC";
+		Cursor result = db.query(TB_NAME, null, where, null, null, null, orderBy);
+		while(result.moveToNext()){
+			noteList.add(getNote(result));
+		}
+		result.close();
+		return noteList;
+	}
 	/**
 	 * get notes by Title
 	 * 
@@ -265,6 +282,15 @@ public class NoteDAO {
 			  sb.append(CREATE_TIME);
 			  sb.append(" >= ");
 			  sb.append(Long.toString(criteria.getCreateTime()));
+			}
+			item_count++;
+		}
+		if(criteria.getExecTime() > 0 ){
+			if(item_count < 1){
+			  sb.append(" WHERE ");
+			  sb.append(EXEC_TIME);
+			  sb.append(" >= ");
+			  sb.append(Long.toString(criteria.getExecTime()));
 			}
 			item_count++;
 		}

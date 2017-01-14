@@ -73,7 +73,10 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			m_Calendar.set(Calendar.YEAR, year);
 			m_Calendar.set(Calendar.MONTH, monthOfYear);
 			m_Calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-			doDateSearch(m_Calendar);
+			m_Calendar.set(Calendar.HOUR_OF_DAY, 0);
+			m_Calendar.set(Calendar.MINUTE, 0);
+			m_Calendar.set(Calendar.SECOND, 0);
+			doDateSearch(m_Calendar, true);
 		}
 		
 	};
@@ -166,7 +169,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			// query todos 邏輯
 			filterText.setText(getResources().getString(R.string.query_todos));
 			Calendar c = Calendar.getInstance();
-			doDateSearch(c);
+			doDateSearch(c, false);
 			return true;
 		case R.id.action_query_after_date:
 			// add pick date logic
@@ -333,17 +336,28 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	 * 執行用執行時間來選取記事
 	 * 
 	 * @param c
+	 * @param isByCreateTime TODO
 	 */
-	public void doDateSearch(Calendar c){
+	public void doDateSearch(Calendar c, boolean isByCreateTime){
 		String queryTitle = inputSearch.getText().toString().trim();
 	    noteList.clear();
 	    if(queryTitle.length() == 0){
-	    	noteList.addAll(noteDAO.getAllByDate(c.getTimeInMillis()));
+	    	if(isByCreateTime){
+	    		noteList.addAll(noteDAO.getAllByCreateDate(c.getTimeInMillis()));
+	    	}
+	    	else{
+	    		noteList.addAll(noteDAO.getAllByExecDate(c.getTimeInMillis()));
+	    	}
 	    }
 	    else{
 	    	NoteVO criteria = new NoteVO();
 	    	criteria.setTitle(queryTitle);
-	    	criteria.setCreateTime(c.getTimeInMillis());
+	    	if(isByCreateTime){
+	    		criteria.setCreateTime(c.getTimeInMillis());
+	    	}
+	    	else{
+	    		criteria.setExecTime(c.getTimeInMillis());
+	    	}
 	    	noteList.addAll(noteDAO.getNotesByCriteria(criteria));
 	    }
 	    noteListAdapter.notifyDataSetInvalidated();
