@@ -24,5 +24,6 @@
     <string name="confirm_exec_time">確認</string>
     <string name="datetimepicker_title">選擇執行時間</string>
     <string name="confirm_btn_str">確認</string>
+    <string name="execute_time_after_current_time_30_minutes">執行時間需要大於現在時間30分鐘</string>
 
 </resources>

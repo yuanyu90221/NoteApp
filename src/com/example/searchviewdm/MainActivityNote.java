@@ -70,6 +70,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 			exec_time.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			exec_time.set(Calendar.MINUTE, minute);
+			checkExecTimeCorrectPeriod();
 			exec_time_picker.setText(formatTimeString(exec_time));
 		}
 	};
@@ -167,19 +168,21 @@ public class MainActivityNote extends Activity implements OnClickListener{
 				    currentTitle = note_title.getText().toString().trim();
 				    note_title.setText(currentTitle);
 				    if(currentTitle.length() > 0){
-				    	NoteVO note = getCurrentValues();
-					    if(visibily==View.VISIBLE){ // update
-					    	//取消之前的notify
-					    	cancelBeforeAlarmManager(noteDAO.getById(_id));
-					    	note.set_id(_id);
-					    	noteDAO.update(note);
-					    	
-					    }
-					    else{ //insert
-					    	noteDAO.insert(note);
-					    }
-					    pushToAlartManager(note);
-					    finish();
+				    	if(checkExecTimeCorrectPeriod()){
+					    	NoteVO note = getCurrentValues();
+						    if(visibily==View.VISIBLE){ // update
+						    	//取消之前的notify
+						    	cancelBeforeAlarmManager(noteDAO.getById(_id));
+						    	note.set_id(_id);
+						    	noteDAO.update(note);
+						    	
+						    }
+						    else{ //insert
+						    	noteDAO.insert(note);
+						    }
+						    pushToAlartManager(note);
+						    finish();
+				    	}
 				    }
 				    else{
 				      note_title.setHint(getResources().getString(R.string.note_title_should_not_null));
@@ -191,12 +194,14 @@ public class MainActivityNote extends Activity implements OnClickListener{
 				    currentTitle = note_title.getText().toString().trim();
 				    note_title.setText(currentTitle);
 				    if(currentTitle.length() > 0){
-				    	note = getCurrentValues();
-					    Calendar c = Calendar.getInstance();
-					    note.setCreateTime(c.getTimeInMillis());
-					    noteDAO.insert(note);
-					    pushToAlartManager(note);
-					    finish();
+				    	if(checkExecTimeCorrectPeriod()){
+					    	note = getCurrentValues();
+						    Calendar c = Calendar.getInstance();
+						    note.setCreateTime(c.getTimeInMillis());
+						    noteDAO.insert(note);
+						    pushToAlartManager(note);
+						    finish();
+				    	}
 				    }
 				    else{
 				    	note_title.setHint(getResources().getString(R.string.note_title_should_not_null));	
@@ -398,4 +403,38 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		    am.cancel(pi);
 		}
 	}
+	
+	public boolean checkExecTimeCorrectPeriod(){
+		boolean checkExecTimeValid = true;
+		Calendar curCal = Calendar.getInstance();
+		curCal.add(Calendar.MINUTE, 29);
+		if(exec_time.getTimeInMillis() < curCal.getTimeInMillis()){
+			showHintCheckDialog();
+			checkExecTimeValid = false;
+			exec_time = curCal;
+		}
+		return checkExecTimeValid;
+		
+	}
+	
+	/**
+	 * confirm execute_time setting
+	 */
+	public void showHintCheckDialog(){
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivityNote.this);
+ 	    alertDialog.setMessage(getResources().getString(R.string.execute_time_after_current_time_30_minutes));
+	     
+ 	    alertDialog.setPositiveButton(R.string.confirm_btn_str, new DialogInterface.OnClickListener() {
+				
+ 	    		@Override
+ 	    		public void onClick(DialogInterface dialog, int which) {
+ 	    			    txv_executeTime.setText(formatDateTimeString(exec_time));
+ 	    				dialog.dismiss();
+ 	    				
+ 	    			}
+				}
+ 	     );
+	     alertDialog.show();
+    }
+	
 }
