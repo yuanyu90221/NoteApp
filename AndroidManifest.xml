@@ -32,9 +32,23 @@
             android:label="@string/title_activity_main_activity_note" >
         </activity>
         <receiver android:name="com.note.broadcast.NoteReceiver">
+            
+        </receiver>
+        
+        <receiver android:name="com.note.broadcast.AlarmInitRecorder"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
+            <intent-filter>
+	            <action android:name="android.intent.action.PACKAGE_REPLACED" />
+    	        <data android:scheme="package" />
+        	</intent-filter>
+        	<intent-filter>
+            	<action android:name="android.intent.action.PACKAGE_ADDED" />
+            	<data android:scheme="package" />
+        	</intent-filter>
         </receiver>
     </application>
 
