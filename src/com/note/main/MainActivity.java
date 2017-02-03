@@ -190,7 +190,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 			noteDAO = new NoteDAO(getApplicationContext());
 			noteDAO.deleteAll();
 			noteList.clear();
-			noteListAdapter.notifyDataSetInvalidated();
+			noteListAdapter.notifyDataSetChanged();
 			return true;
 		case R.id.action_about_us:
 			// about us
@@ -323,7 +323,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 		else{
 			noteList.addAll(noteDAO.getAll());
 		}
-		noteListAdapter.notifyDataSetInvalidated();
+		noteListAdapter.notifyDataSetChanged();
 	}
 	
 	/**
@@ -354,7 +354,7 @@ public class MainActivity extends Activity implements OnClickListener,OnItemClic
 	    	}
 	    	noteList.addAll(noteDAO.getNotesByCriteria(criteria));
 	    }
-	    noteListAdapter.notifyDataSetInvalidated();
+	    noteListAdapter.notifyDataSetChanged();
 		special_query.setVisibility(View.VISIBLE);
 	}
 }
