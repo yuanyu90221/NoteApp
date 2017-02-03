@@ -4,10 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import com.example.searchviewdm.MainActivityNote;
 import com.example.searchviewdm.R;
 import com.note.constant.Constant;
 import com.note.db.NoteDAO;
+import com.note.editview.MainActivityNote;
 import com.note.vo.NoteVO;
 
 import android.app.Notification;

@@ -9,10 +9,10 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
-import com.example.searchviewdm.MainActivityNote;
 import com.example.searchviewdm.R;
 import com.note.constant.Constant;
 import com.note.db.NoteDAO;
+import com.note.editview.MainActivityNote;
 import com.note.vo.NoteListAdapter;
 import com.note.vo.NoteVO;
 

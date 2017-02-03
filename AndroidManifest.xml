@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivityNote"
+            android:name="com.note.editview.MainActivityNote"
             android:label="@string/title_activity_main_activity_note" >
         </activity>
         <receiver android:name="com.note.broadcast.NoteReceiver">

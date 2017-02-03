@@ -1,9 +1,10 @@
-package com.example.searchviewdm;
+package com.note.editview;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import com.example.searchviewdm.R;
 import com.note.broadcast.NoteReceiver;
 import com.note.constant.Constant;
 import com.note.db.NoteDAO;
