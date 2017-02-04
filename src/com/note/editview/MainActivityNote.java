@@ -149,11 +149,19 @@ public class MainActivityNote extends Activity implements OnClickListener{
 	    switch(item.getItemId()){
 	        case android.R.id.home:
 	        	// push left arrow will return
-	            finish();
+	        	showLeaveHintCheckDialog();
 	            break;   
 	    }
 	    return false;
 	}
+	
+	
+	@Override
+	public void onBackPressed() {
+				//super.onBackPressed();
+		showLeaveHintCheckDialog();
+	}
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -412,6 +420,7 @@ public class MainActivityNote extends Activity implements OnClickListener{
 		if(exec_time.getTimeInMillis() < curCal.getTimeInMillis()){
 			showHintCheckDialog();
 			checkExecTimeValid = false;
+			curCal.add(Calendar.MINUTE, 1);
 			exec_time = curCal;
 		}
 		return checkExecTimeValid;
@@ -438,4 +447,31 @@ public class MainActivityNote extends Activity implements OnClickListener{
 	     alertDialog.show();
     }
 	
+	/**
+	 * confirm leave MainActivityNote
+	 */
+	public void showLeaveHintCheckDialog(){
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivityNote.this);
+ 	    alertDialog.setMessage(getResources().getString(R.string.beforeLeaveEditView));
+	     
+ 	    alertDialog.setPositiveButton(R.string.confirm_btn_str, new DialogInterface.OnClickListener() {
+				
+ 	    		@Override
+ 	    		public void onClick(DialogInterface dialog, int which) {
+ 	    			    MainActivityNote.this.finish();
+ 	    				dialog.dismiss();
+ 	    				
+ 	    			}
+				}
+ 	     );
+		 alertDialog.setNegativeButton(R.string.cancelBtnStr, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();    				
+					}
+				}
+		 );
+	     alertDialog.show();
+    }
 }
